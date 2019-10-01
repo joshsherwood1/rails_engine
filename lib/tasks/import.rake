@@ -14,6 +14,10 @@ namespace :import do
     CSV.foreach('./lib/sales_engine/data/customers.csv', headers: true) do |row|
       Customer.create(row.to_h)
     end
+
+    CSV.foreach('./lib/sales_engine/data/invoices.csv', headers: true) do |row|
+      Customer.create(row.to_h)
+    end
   end
 
 end
