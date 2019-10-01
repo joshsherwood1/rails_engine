@@ -4,7 +4,7 @@ class CreateItems < ActiveRecord::Migration[5.1]
       t.string :name
       t.string :description
       t.float :unit_price
-      t.integer :merchant_id
+      t.bigint :merchant_id
       t.string :created_at
       t.text :updated_at
 
