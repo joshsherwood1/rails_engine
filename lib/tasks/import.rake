@@ -3,6 +3,11 @@ require 'csv'
 namespace :import do
   desc "Import prospects from CSV file"
   task all: :environment do
+
+    CSV.foreach('./lib/sales_engine/data/transactions.csv', headers: true) do |row|
+      Transaction.create(row.to_h)
+    end
+
     CSV.foreach('./lib/sales_engine/data/items.csv', headers: true) do |row|
       Item.create(row.to_h)
     end
@@ -24,4 +29,11 @@ namespace :import do
     end
   end
 
+  desc "Import transactions from CSV file"
+  task transaction: :environment do
+
+    CSV.foreach('./lib/sales_engine/data/transactions.csv', headers: true) do |row|
+      Transaction.create(row.to_h)
+    end
+  end
 end
