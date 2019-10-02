@@ -10,6 +10,6 @@ describe "Items API" do
 
     items = JSON.parse(response.body)
 
-    expect(items.count).to eq(3)
+    expect(items["data"].count).to eq(3)
   end
 end

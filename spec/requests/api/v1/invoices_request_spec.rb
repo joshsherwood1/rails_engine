@@ -10,6 +10,6 @@ describe "Invoices API" do
 
     invoices = JSON.parse(response.body)
 
-    expect(invoices.count).to eq(3)
+    expect(invoices["data"].count).to eq(3)
   end
 end
