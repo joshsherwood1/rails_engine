@@ -13,16 +13,16 @@ describe "Merchants API" do
     expect(merchants["data"].count).to eq(3)
   end
 
-  # it "can get one merchant by its id" do
-  #   id = create(:merchant).id
-  #
-  #   get "/api/v1/merchants/#{id}"
-  #
-  #   merchant = JSON.parse(response.body)
-  #
-  #   expect(response).to be_successful
-  #   expect(merchant["data"]["id"]).to eq(id.to_s)
-  # end
+  it "can get one merchant by its id" do
+    id = create(:merchant).id
+
+    get "/api/v1/merchants/#{id}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"]["id"]).to eq(id.to_s)
+  end
 
   it "sends specified top merchants by most revenue" do
     customer_1 = create(:customer)
