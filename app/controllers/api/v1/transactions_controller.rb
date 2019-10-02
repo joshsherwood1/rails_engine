@@ -1,5 +1,5 @@
 class Api::V1::TransactionsController < ApplicationController
   def index
-    render json: Transaction.all
+    render json: TransactionSerializer.new(Transaction.all)
   end
 end
