@@ -13,6 +13,17 @@ describe "Merchants API" do
     expect(merchants["data"].count).to eq(3)
   end
 
+  # it "can get one merchant by its id" do
+  #   id = create(:merchant).id
+  #
+  #   get "/api/v1/merchants/#{id}"
+  #
+  #   merchant = JSON.parse(response.body)
+  #
+  #   expect(response).to be_successful
+  #   expect(merchant["data"]["id"]).to eq(id.to_s)
+  # end
+
   it "sends specified top merchants by most revenue" do
     customer_1 = create(:customer)
     merchant_1 = create(:merchant)
@@ -20,7 +31,7 @@ describe "Merchants API" do
     merchant_3 = create(:merchant)
     merchant_4 = create(:merchant)
     merchant_5 = create(:merchant)
-    merchant_5 = create(:merchant)
+    merchant_6 = create(:merchant)
     invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
     invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
     invoice_3 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_3.id)
@@ -40,7 +51,6 @@ describe "Merchants API" do
     create(:invoice_item, item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 1)
     create(:invoice_item, item_id: item_6.id, invoice_id: invoice_5.id, unit_price: item_6.unit_price, quantity: 1)
 
-
     get "/api/v1/merchants/most_revenue?quantity=3"
 
     expect(response).to be_successful
@@ -48,5 +58,9 @@ describe "Merchants API" do
     merchants = JSON.parse(response.body)
 
     expect(merchants["data"].count).to eq(3)
+
+    expect(merchants["data"].first["id"]).to eq(merchant_2.id.to_s)
+    expect(merchants["data"][1]["id"]).to eq(merchant_4.id.to_s)
+    expect(merchants["data"][2]["id"]).to eq(merchant_3.id.to_s)
   end
 end
