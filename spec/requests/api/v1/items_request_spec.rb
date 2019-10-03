@@ -61,4 +61,40 @@ describe "Items API" do
 
     expect(item["data"]["id"]).to eq(item_6.id.to_s)
   end
+
+  it "finds single item record based on created_at attribute" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde")
+    item_1 = create(:item, name: "Item Qui Esse", merchant_id: merchant_1.id, id: 1, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:21 UTC")
+    item_2 = create(:item, name: "Item Qui Essei", merchant_id: merchant_1.id, id: 2, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_3 = create(:item, name: "Item Qui Esseie", merchant_id: merchant_1.id, id: 3, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_4 = create(:item, name: "Item Qui Esseia", merchant_id: merchant_1.id, id: 4, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_5 = create(:item, name: "Item Qui Esseii", merchant_id: merchant_1.id, id: 5, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_6 = create(:item, name: "Item Qui Esseiu", merchant_id: merchant_1.id, id: 6, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/items/find?created_at=2012-03-27 16:12:21 UTC"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["id"]).to eq(item_1.id.to_s)
+  end
+
+  it "finds single item record based on updated_at attribute" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde")
+    item_1 = create(:item, name: "Item Qui Esse", merchant_id: merchant_1.id, id: 1, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:21 UTC")
+    item_2 = create(:item, name: "Item Qui Essei", merchant_id: merchant_1.id, id: 2, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_3 = create(:item, name: "Item Qui Esseie", merchant_id: merchant_1.id, id: 3, updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_4 = create(:item, name: "Item Qui Esseia", merchant_id: merchant_1.id, id: 4, updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_5 = create(:item, name: "Item Qui Esseii", merchant_id: merchant_1.id, id: 5, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_6 = create(:item, name: "Item Qui Esseiu", merchant_id: merchant_1.id, id: 6, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/items/find?updated_at=2012-03-28 14:53:59 UTC"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["id"]).to eq(item_3.id.to_s)
+  end
 end
