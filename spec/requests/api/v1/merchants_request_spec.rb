@@ -72,4 +72,72 @@ describe "Merchants API" do
     expect(merchants["data"][1]["id"]).to eq(merchant_4.id.to_s)
     expect(merchants["data"][2]["id"]).to eq(merchant_3.id.to_s)
   end
+
+  it "finds single merchant record based on name" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones")
+    merchant_3 = create(:merchant, name: "Willms and Sons")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel")
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    merchant_6 = create(:merchant, name: "Williamson Group")
+
+    get "/api/v1/merchants/find?name=Cummings-Thiel"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_4.id.to_s)
+  end
+
+  it "finds single merchant record based on updated_at attribute" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+
+    get "/api/v1/merchants/find?updated_at=2012-03-27 14:53:59 utC"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_1.id.to_s)
+  end
+
+  it "finds single merchant record based on created_at attribute" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/merchants/find?created_at=2012-03-27 16:12:25 utc"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_6.id.to_s)
+  end
+
+  it "finds single merchant record based on id" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 1)
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 2)
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 3)
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 4)
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 5)
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC", id: 6)
+
+    get "/api/v1/merchants/find?id=2"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_2.id.to_s)
+  end
 end
