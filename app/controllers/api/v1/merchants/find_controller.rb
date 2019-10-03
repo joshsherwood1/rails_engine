@@ -17,6 +17,9 @@ class Api::V1::Merchants::FindController < ApplicationController
   def index
     if params.keys.include?("name")
       render json: MerchantSerializer.new(Merchant.find_by_name(params["name"]))
+    elsif params.keys.include?("updated_at")
+      merchants = Merchant.find_by_updated_at(params["updated_at"])
+      render json: MerchantFindAllSerializer.new(merchants)
     else params.keys.include?("id")
       render json: MerchantSerializer.new(Merchant.find_by_id(params["id"]))
     end
