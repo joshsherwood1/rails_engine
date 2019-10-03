@@ -4,7 +4,7 @@ class CreateInvoiceItems < ActiveRecord::Migration[5.1]
       t.bigint :item_id
       t.bigint :invoice_id
       t.integer :quantity
-      t.integer :unit_price
+      t.float :unit_price
       t.string :created_at
       t.string :updated_at
 
