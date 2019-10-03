@@ -27,4 +27,28 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(invoice["data"]["id"]).to eq(id.to_s)
   end
+
+  it "finds single invoice record based on id" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant)
+    merchant_4 = create(:merchant)
+    merchant_5 = create(:merchant)
+    merchant_6 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id, id: 1)
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id, id: 2)
+    invoice_3 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_3.id, id: 3)
+    invoice_4 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id, id: 4)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id, id: 5)
+    invoice_6 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_5.id, id: 6)
+
+    get "/api/v1/invoices/find?id=2"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["id"]).to eq(invoice_2.id.to_s)
+  end
 end
