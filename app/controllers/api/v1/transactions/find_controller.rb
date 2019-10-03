@@ -2,8 +2,8 @@ class Api::V1::Transactions::FindController < ApplicationController
   def show
     #binding.pry
     if params.keys.include?("invoice_id")
-      name = params["name"]
-      render json: TransactionSerializer.new(Transaction.find_by(name: name))
+      invoice_id = params["invoice_id"]
+      render json: TransactionSerializer.new(Transaction.find_by(invoice_id: invoice_id))
     elsif params.keys.include?("updated_at")
       updated_at = params["updated_at"]
       render json: TransactionSerializer.new(Transaction.find_by(updated_at: updated_at))
