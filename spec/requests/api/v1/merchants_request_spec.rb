@@ -108,4 +108,22 @@ describe "Merchants API" do
 
     expect(merchant["data"]["id"]).to eq(merchant_1.id.to_s)
   end
+
+  it "finds single merchant record based on created_at attribute" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/merchants/find?created_at=2012-03-27 16:12:25 UTC"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_6.id.to_s)
+  end
 end
