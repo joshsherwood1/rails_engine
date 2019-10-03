@@ -9,4 +9,8 @@ RSpec.describe Transaction, type: :model do
     it { should validate_presence_of :created_at }
     it { should validate_presence_of :updated_at }
   end
+
+  describe "relationships" do
+    it {should belong_to :invoice}
+  end
 end

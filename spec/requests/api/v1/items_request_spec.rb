@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe "Items API" do
   it "sends a list of items" do
-    create_list(:item, 3)
+    merchant = create(:merchant)
+    create_list(:item, 3, merchant_id: merchant.id)
 
     get '/api/v1/items'
 
@@ -10,6 +11,6 @@ describe "Items API" do
 
     items = JSON.parse(response.body)
 
-    expect(items.count).to eq(3)
+    expect(items["data"].count).to eq(3)
   end
 end
