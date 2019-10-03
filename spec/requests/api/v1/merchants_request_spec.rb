@@ -50,12 +50,21 @@ describe "Merchants API" do
     create(:invoice_item, item_id: item_4.id, invoice_id: invoice_3.id, unit_price: item_4.unit_price, quantity: 1)
     create(:invoice_item, item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 1)
     create(:invoice_item, item_id: item_6.id, invoice_id: invoice_5.id, unit_price: item_6.unit_price, quantity: 1)
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_3.id, result: "success")
+    create(:transaction, invoice_id: invoice_4.id, result: "success")
+    create(:transaction, invoice_id: invoice_5.id, result: "success")
+    create(:transaction, invoice_id: invoice_6.id, result: "success")
+
 
     get "/api/v1/merchants/most_revenue?quantity=3"
 
     expect(response).to be_successful
 
     merchants = JSON.parse(response.body)
+
+    #binding.pry
 
     expect(merchants["data"].count).to eq(3)
 
