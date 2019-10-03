@@ -176,4 +176,22 @@ describe "Merchants API" do
     expect(merchants["data"].count).to eq(1)
     expect(merchants["data"].all? { |hash| hash["attributes"]["id"] == 2 }).to eq(true)
   end
+
+  it "finds all merchant record matches based on updated at" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+
+    get "/api/v1/merchants/find_all?updated_at=2012-03-27 14:53:59 UTC"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(5)
+    expect(merchants["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-03-27 14:53:59 UTC" }).to eq(true)
+  end
 end
