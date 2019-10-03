@@ -140,4 +140,40 @@ describe "Merchants API" do
 
     expect(merchant["data"]["id"]).to eq(merchant_2.id.to_s)
   end
+
+  it "finds all merchant record matches based on name" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones")
+    merchant_3 = create(:merchant, name: "Willms and Sons")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel")
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    merchant_6 = create(:merchant, name: "Williamson Group")
+
+    get "/api/v1/merchants/find_all?name=Williamson Group"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(2)
+    expect(merchants["data"].all? { |hash| hash["attributes"]["name"] == "Williamson Group" }).to eq(true)
+  end
+
+  it "finds all merchant record matches based on id" do
+    merchant_1 = create(:merchant, id: 1)
+    merchant_2 = create(:merchant, id: 2)
+    merchant_3 = create(:merchant, id: 3)
+    merchant_4 = create(:merchant, id: 4)
+    merchant_5 = create(:merchant, id: 5)
+    merchant_6 = create(:merchant, id: 6)
+
+    get "/api/v1/merchants/find_all?id=2"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(1)
+    expect(merchants["data"].all? { |hash| hash["attributes"]["id"] == 2 }).to eq(true)
+  end
 end
