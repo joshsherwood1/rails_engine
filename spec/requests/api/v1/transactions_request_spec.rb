@@ -29,4 +29,25 @@ describe "Transactions API" do
     expect(response).to be_successful
     expect(invoice["data"]["id"]).to eq(id.to_s)
   end
+
+  it "finds single transaction record based on id" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1)
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2)
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3)
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4)
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5)
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6)
+
+    get "/api/v1/transactions/find?id=3"
+
+    expect(response).to be_successful
+
+    transaction = JSON.parse(response.body)
+
+    expect(transaction["data"]["id"]).to eq(transaction_3.id.to_s)
+  end
+
 end
