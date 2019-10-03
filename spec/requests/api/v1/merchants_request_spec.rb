@@ -74,7 +74,6 @@ describe "Merchants API" do
   end
 
   it "finds single merchant record based on name" do
-    customer_1 = create(:customer)
     merchant_1 = create(:merchant, name: "Schroeder-Jerde")
     merchant_2 = create(:merchant, name: "Klein, Rempel and Jones")
     merchant_3 = create(:merchant, name: "Willms and Sons")
@@ -92,7 +91,6 @@ describe "Merchants API" do
   end
 
   it "finds single merchant record based on updated_at attribute" do
-    customer_1 = create(:customer)
     merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC")
     merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC")
     merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC")
@@ -110,7 +108,6 @@ describe "Merchants API" do
   end
 
   it "finds single merchant record based on created_at attribute" do
-    customer_1 = create(:customer)
     merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
     merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC")
     merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC", created_at: "2012-03-27 14:53:59 UTC")
@@ -128,7 +125,6 @@ describe "Merchants API" do
   end
 
   it "finds single merchant record based on id" do
-    customer_1 = create(:customer)
     merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 1)
     merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 2)
     merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC", created_at: "2012-03-27 14:53:59 UTC", id: 3)
