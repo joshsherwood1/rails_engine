@@ -97,4 +97,61 @@ describe "Items API" do
 
     expect(item["data"]["id"]).to eq(item_3.id.to_s)
   end
+
+  it "finds single item record based on merchant_id" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", id: 1)
+    merchant_2 = create(:merchant, name: "Schroeder", id: 2)
+    item_1 = create(:item, name: "Item Qui Esse", merchant_id: merchant_2.id)
+    item_2 = create(:item, name: "Item Qui Essei", merchant_id: merchant_2.id)
+    item_3 = create(:item, name: "Item Qui Esseie", merchant_id: merchant_2.id)
+    item_4 = create(:item, name: "Item Qui Esseia", merchant_id: merchant_1.id)
+    item_5 = create(:item, name: "Item Qui Esseii", merchant_id: merchant_1.id)
+    item_6 = create(:item, name: "Item Qui Esseiu", merchant_id: merchant_1.id)
+
+    get "/api/v1/items/find?merchant_id=1"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["id"]).to eq(item_4.id.to_s)
+  end
+
+  it "finds single item record based on description" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", id: 1)
+    merchant_2 = create(:merchant, name: "Schroeder", id: 2)
+    item_1 = create(:item, description: "Item Qui Esse", merchant_id: merchant_2.id)
+    item_2 = create(:item, description: "Item Qui Essei", merchant_id: merchant_2.id)
+    item_3 = create(:item, description: "Item Qui Esseie", merchant_id: merchant_2.id)
+    item_4 = create(:item, description: "Item Qui Esseia", merchant_id: merchant_1.id)
+    item_5 = create(:item, description: "Item Qui Esseii", merchant_id: merchant_1.id)
+    item_6 = create(:item, description: "Item Qui Esseiu", merchant_id: merchant_1.id)
+
+    get "/api/v1/items/find?description=Item Qui Essei"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["id"]).to eq(item_2.id.to_s)
+  end
+
+  it "finds single item record based on unit price" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", id: 1)
+    merchant_2 = create(:merchant, name: "Schroeder", id: 2)
+    item_1 = create(:item, unit_price: 12344, merchant_id: merchant_2.id)
+    item_2 = create(:item, unit_price: 12344, merchant_id: merchant_2.id)
+    item_3 = create(:item, unit_price: 22344, merchant_id: merchant_2.id)
+    item_4 = create(:item, unit_price: 32344, merchant_id: merchant_1.id)
+    item_5 = create(:item, unit_price: 123443, merchant_id: merchant_1.id)
+    item_6 = create(:item, unit_price: 1234455, merchant_id: merchant_1.id)
+
+    get "/api/v1/items/find?unit_price=22344"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["id"]).to eq(item_3.id.to_s)
+  end
 end
