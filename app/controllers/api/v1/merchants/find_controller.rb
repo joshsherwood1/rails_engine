@@ -7,6 +7,9 @@ class Api::V1::Merchants::FindController < ApplicationController
     elsif params.keys.include?("updated_at")
       updated_at = params["updated_at"]
       render json: MerchantSerializer.new(Merchant.find_by(updated_at: updated_at))
+    elsif params.keys.include?("id")
+      id = params["id"]
+      render json: MerchantSerializer.new(Merchant.find(id))
     else params.keys.include?("created_at")
       created_at = params["created_at"]
       render json: MerchantSerializer.new(Merchant.find_by(created_at: created_at))
