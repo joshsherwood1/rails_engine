@@ -9,4 +9,31 @@ class Invoice < ApplicationRecord
                         :merchant_id,
                         :created_at,
                         :updated_at
+  def self.find_by_id(id)
+    where(id: id)
+  end
+
+  def self.find_by_created_at(created_at)
+    where(created_at: created_at)
+  end
+
+  def self.find_by_updated_at(updated_at)
+    where(updated_at: updated_at)
+  end
+
+  def self.find_by_merchant_id(merchant_id)
+    where(merchant_id: merchant_id)
+  end
+
+  def self.find_by_customer_id(customer_id)
+    where(customer_id: customer_id)
+  end
+
+  def self.find_by_created_at(created_at)
+    where(created_at: created_at)
+  end
+
+  def self.find_by_status(status)
+    where(status: status)
+  end
 end
