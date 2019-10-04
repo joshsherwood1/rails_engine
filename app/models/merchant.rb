@@ -12,4 +12,20 @@ class Merchant < ApplicationRecord
     # should the following below work????
     #joins(:invoice_items).joins(:transactions).group(:id).merge(Transaction.successful).select("merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue").order("revenue desc").limit(quantity)
   end
+
+  def self.find_by_name(name)
+    where(name: name)
+  end
+
+  def self.find_by_id(id)
+    where(id: id)
+  end
+
+  def self.find_by_updated_at(date)
+    where(updated_at: date)
+  end
+
+  def self.find_by_created_at(date)
+    where(created_at: date)
+  end
 end

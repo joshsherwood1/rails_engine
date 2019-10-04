@@ -140,4 +140,76 @@ describe "Merchants API" do
 
     expect(merchant["data"]["id"]).to eq(merchant_2.id.to_s)
   end
+
+  it "finds all merchant record matches based on name" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones")
+    merchant_3 = create(:merchant, name: "Willms and Sons")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel")
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    merchant_6 = create(:merchant, name: "Williamson Group")
+
+    get "/api/v1/merchants/find_all?name=Williamson Group"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(2)
+    expect(merchants["data"].all? { |hash| hash["attributes"]["name"] == "Williamson Group" }).to eq(true)
+  end
+
+  it "finds all merchant record matches based on id" do
+    merchant_1 = create(:merchant, id: 1)
+    merchant_2 = create(:merchant, id: 2)
+    merchant_3 = create(:merchant, id: 3)
+    merchant_4 = create(:merchant, id: 4)
+    merchant_5 = create(:merchant, id: 5)
+    merchant_6 = create(:merchant, id: 6)
+
+    get "/api/v1/merchants/find_all?id=2"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(1)
+    expect(merchants["data"].all? { |hash| hash["attributes"]["id"] == 2 }).to eq(true)
+  end
+
+  it "finds all merchant record matches based on updated at" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", updated_at: "2012-03-27 14:54:00 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", updated_at: "2012-03-27 14:53:59 UTC")
+
+    get "/api/v1/merchants/find_all?updated_at=2012-03-27 14:53:59 UTC"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(5)
+    expect(merchants["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-03-27 14:53:59 UTC" }).to eq(true)
+  end
+
+  it "finds all merchant record matches based on created at" do
+    merchant_1 = create(:merchant, name: "Schroeder-Jerde", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_2 = create(:merchant, name: "Klein, Rempel and Jones", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_3 = create(:merchant, name: "Willms and Sons", created_at: "2012-03-27 14:54:00 UTC")
+    merchant_4 = create(:merchant, name: "Cummings-Thiel", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_5 = create(:merchant, name: "Williamson Group", created_at: "2012-03-27 14:53:59 UTC")
+    merchant_6 = create(:merchant, name: "Williamson Group", created_at: "2012-03-27 14:53:59 UTC")
+
+    get "/api/v1/merchants/find_all?created_at=2012-03-27 14:54:00 UTC"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(1)
+    expect(merchants["data"].all? { |hash| Time.parse(hash["attributes"]["created_at"]) == "2012-03-27 14:54:00 UTC" }).to eq(true)
+  end
 end

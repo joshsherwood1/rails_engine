@@ -169,4 +169,151 @@ describe "Transactions API" do
 
     expect(transaction["data"]["id"]).to eq(transaction_5.id.to_s)
   end
+
+  it "finds all transaction record matches based on id" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?id=2"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(1)
+    expect(transactions["data"].all? { |hash| hash["attributes"]["id"] == 2 }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on invoice id" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?invoice_id=1"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(6)
+    expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == 1 }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on result" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?result=success"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(5)
+    expect(transactions["data"].all? { |hash| hash["attributes"]["result"] == "success" }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on credit_card_number" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?credit_card_number=4654405418249632"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(5)
+    expect(transactions["data"].all? { |hash| hash["attributes"]["credit_card_number"] == "4654405418249632" }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on credit_card_expiration_date" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?credit_card_expiration_date=00/0000"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(1)
+    expect(transactions["data"].all? { |hash| hash["attributes"]["credit_card_expiration_date"] == "00/0000" }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on created_at" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?created_at=2012-03-27 16:12:25 UTC"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(5)
+    expect(transactions["data"].all? { |hash| Time.parse(hash["attributes"]["created_at"]) == "2012-03-27 16:12:25 UTC" }).to eq(true)
+  end
+
+  it "finds all transaction record matches based on updated_at" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_2 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "00/0000", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2010-03-27 16:12:25 UTC")
+    transaction_3 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_4 = create(:transaction, invoice_id: invoice_1.id, result: "failed", id: 4, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_5 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 5, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-28 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    transaction_6 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 6, credit_card_number: "4654405418249633", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/find_all?updated_at=2012-03-27 14:53:59 UTC"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(5)
+    expect(transactions["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-03-27 14:53:59 UTC" }).to eq(true)
+  end
 end
