@@ -29,10 +29,6 @@ class Invoice < ApplicationRecord
     where(customer_id: customer_id)
   end
 
-  def self.find_by_created_at(created_at)
-    where(created_at: created_at)
-  end
-
   def self.find_by_status(status)
     where(status: status)
   end
