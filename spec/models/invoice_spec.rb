@@ -60,5 +60,8 @@ RSpec.describe Invoice, type: :model do
       expect(Invoice.find_by_merchant_id(4)).to eq([@invoice_4, @invoice_5])
     end
 
+    it 'can get random invoice id' do
+      expect(Invoice.get_random_id).to be_between(1, 6)
+    end
   end
 end

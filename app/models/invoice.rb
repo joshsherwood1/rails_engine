@@ -32,4 +32,8 @@ class Invoice < ApplicationRecord
   def self.find_by_status(status)
     where(status: status)
   end
+
+  def self.get_random_id
+    pluck(:id).sample
+  end
 end
