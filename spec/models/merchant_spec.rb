@@ -71,5 +71,9 @@ RSpec.describe Merchant, type: :model do
     it 'merchants_with_most_revenue' do
       expect(Merchant.merchants_with_most_revenue(3)).to eq([@merchant_2, @merchant_4, @merchant_3])
     end
+
+    it 'can get random merchant id' do
+      expect(Merchant.get_random_id).to be_between(1, 6)
+    end
   end
 end

@@ -28,4 +28,8 @@ class Merchant < ApplicationRecord
   def self.find_by_created_at(date)
     where(created_at: date)
   end
+
+  def self.get_random_id
+    pluck(:id).sample
+  end
 end
