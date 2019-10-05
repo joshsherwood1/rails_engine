@@ -207,12 +207,6 @@ describe "Customers API" do
     merchant_2 = create(:merchant)
     invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
     invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
-    create(:transaction, invoice_id: invoice_1.id, result: "success")
-    create(:transaction, invoice_id: invoice_2.id, result: "success")
-    create(:transaction, invoice_id: invoice_1.id, result: "success")
-    create(:transaction, invoice_id: invoice_2.id, result: "success")
-    create(:transaction, invoice_id: invoice_1.id, result: "success")
-    create(:transaction, invoice_id: invoice_2.id, result: "success")
 
     get "/api/v1/customers/#{customer_1.id}/invoices"
 
@@ -223,5 +217,29 @@ describe "Customers API" do
     expect(invoices["data"].count).to eq(2)
 
     expect(invoices["data"].all? { |hash| hash["attributes"]["customer_id"] == customer_1.id }).to eq(true)
+  end
+
+  it "show all transactions belonging to a customer" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+
+    get "/api/v1/customers/#{customer_1.id}/transactions"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(6)
+
+    expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_1.id || invoice_2.id}).to eq(true)
   end
 end
