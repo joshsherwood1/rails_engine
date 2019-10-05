@@ -555,8 +555,8 @@ describe "Invoice Items API" do
 
     expect(response).to be_successful
 
-    merchant = JSON.parse(response.body)
+    item = JSON.parse(response.body)
 
-    expect(merchant["data"]["id"]).to eq(item_1.id.to_s)
+    expect(item["data"]["id"]).to eq(item_1.id.to_s)
   end
 end
