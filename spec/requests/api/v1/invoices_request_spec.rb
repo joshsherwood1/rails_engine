@@ -391,4 +391,18 @@ describe "Invoices API" do
 
     expect(transactions["data"].count).to eq(3)
   end
+
+  it "show customer associated with an invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+
+    get "/api/v1/invoices/#{invoice_5.id}/customer"
+
+    expect(response).to be_successful
+
+    customer = JSON.parse(response.body)
+
+    expect(customer["data"]["id"]).to eq(customer_1.id.to_s)
+  end
 end
