@@ -36,4 +36,8 @@ class Item < ApplicationRecord
   def self.find_by_id(id)
     where(id: id)
   end
+
+  def self.get_random_id
+    pluck(:id).sample
+  end
 end

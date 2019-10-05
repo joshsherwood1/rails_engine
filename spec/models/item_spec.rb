@@ -79,5 +79,9 @@ RSpec.describe Item, type: :model do
     it 'find_by_merchant_id' do
       expect(Item.find_by_merchant_id(4)).to eq([@item_5, @item_6])
     end
+
+    it 'can get random item id' do
+      expect(Item.get_random_id).to be_between(1, 6)
+    end
   end
 end
