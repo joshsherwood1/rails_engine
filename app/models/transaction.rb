@@ -37,4 +37,8 @@ class Transaction < ApplicationRecord
   def self.find_by_credit_card_expiration_date(credit_card_expiration_date)
     where(credit_card_expiration_date: credit_card_expiration_date)
   end
+
+  def self.get_random_id
+    pluck(:id).sample
+  end
 end

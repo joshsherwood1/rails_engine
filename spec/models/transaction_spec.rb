@@ -56,5 +56,9 @@ RSpec.describe Transaction, type: :model do
     it 'find_by_result' do
       expect(Transaction.find_by_result("success")).to eq([@transaction_1, @transaction_2, @transaction_3, @transaction_5, @transaction_6])
     end
+
+    it 'can get random transaction id' do
+      expect(Transaction.get_random_id).to be_between(1, 6)
+    end
   end
 end
