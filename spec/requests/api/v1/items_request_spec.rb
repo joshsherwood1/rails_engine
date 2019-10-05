@@ -262,4 +262,17 @@ describe "Items API" do
     expect(items["data"].count).to eq(5)
     expect(items["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-02-27 14:53:59 UTC" }).to eq(true)
   end
+
+  it "sends a random item" do
+    merchant = create(:merchant)
+    create_list(:item, 10, merchant_id: merchant.id)
+
+    get "/api/v1/items/random"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["attributes"].count).to eq(5)
+  end
 end
