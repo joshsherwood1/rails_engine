@@ -35,4 +35,8 @@ class InvoiceItem < ApplicationRecord
   def self.find_by_quantity(quantity)
     where(quantity: quantity)
   end
+
+  def self.get_random_id
+    pluck(:id).sample
+  end
 end

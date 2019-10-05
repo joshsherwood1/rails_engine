@@ -38,12 +38,12 @@ RSpec.describe InvoiceItem, type: :model do
       item_4 = create(:item, unit_price: 42345, merchant_id: @merchant_3.id)
       item_5 = create(:item, unit_price: 52345, merchant_id: @merchant_4.id)
       item_6 = create(:item, unit_price: 62345, merchant_id: @merchant_4.id)
-      @invoice_item_1 = create(:invoice_item, item_id: item_1.id, invoice_id: @invoice_6.id, unit_price: item_1.unit_price, quantity: 1)
+      @invoice_item_1 = create(:invoice_item, item_id: item_1.id, invoice_id: @invoice_6.id, unit_price: item_1.unit_price, quantity: 1, id: 456788)
       @invoice_item_2 = create(:invoice_item, item_id: @item_2.id, invoice_id: invoice_1.id, unit_price: @item_2.unit_price, quantity: 1, id: 456789)
-      @invoice_item_3 = create(:invoice_item, item_id: item_3.id, invoice_id: invoice_2.id, unit_price: item_3.unit_price, quantity: 15)
-      @invoice_item_4 = create(:invoice_item, item_id: item_4.id, invoice_id: invoice_3.id, unit_price: item_4.unit_price, quantity: 1)
-      @invoice_item_5 = create(:invoice_item, item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 1)
-      @invoice_item_6 = create(:invoice_item, item_id: item_6.id, invoice_id: invoice_5.id, unit_price: item_6.unit_price, quantity: 1)
+      @invoice_item_3 = create(:invoice_item, item_id: item_3.id, invoice_id: invoice_2.id, unit_price: item_3.unit_price, quantity: 15, id: 456790)
+      @invoice_item_4 = create(:invoice_item, item_id: item_4.id, invoice_id: invoice_3.id, unit_price: item_4.unit_price, quantity: 1, id: 456791)
+      @invoice_item_5 = create(:invoice_item, item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 1, id: 456792)
+      @invoice_item_6 = create(:invoice_item, item_id: item_6.id, invoice_id: invoice_5.id, unit_price: item_6.unit_price, quantity: 1, id: 456793)
     end
 
 
@@ -73,6 +73,10 @@ RSpec.describe InvoiceItem, type: :model do
 
     it 'find_by_invoice_id' do
       expect(InvoiceItem.find_by_invoice_id(@invoice_6.id)).to eq([@invoice_item_1])
+    end
+
+    it 'can get random item id' do
+      expect(InvoiceItem.get_random_id).to be_between(456788, 456793)
     end
   end
 end
