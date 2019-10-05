@@ -75,7 +75,7 @@ RSpec.describe InvoiceItem, type: :model do
       expect(InvoiceItem.find_by_invoice_id(@invoice_6.id)).to eq([@invoice_item_1])
     end
 
-    it 'can get random item id' do
+    it 'can get random invoice item id' do
       expect(InvoiceItem.get_random_id).to be_between(456788, 456793)
     end
   end

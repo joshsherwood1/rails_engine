@@ -76,7 +76,7 @@ RSpec.describe Customer, type: :model do
       expect(Customer.find_by_updated_at("2012-03-27 14:53:59 UTC")).to eq([@customer_1, @customer_2, @customer_4, @customer_5, @customer_6])
     end
 
-    it 'can get random item id' do
+    it 'can get random customer id' do
       expect(Customer.get_random_id).to be_between(1, 6)
     end
   end
