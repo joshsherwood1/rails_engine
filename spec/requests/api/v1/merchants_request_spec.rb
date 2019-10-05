@@ -229,11 +229,11 @@ describe "Merchants API" do
 
     expect(response).to be_successful
 
-    merchants = JSON.parse(response.body)
+    items = JSON.parse(response.body)
 
-    expect(merchants["data"].count).to eq(4)
+    expect(items["data"].count).to eq(4)
 
-    expect(merchants["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_1.id }).to eq(true)
+    expect(items["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_1.id }).to eq(true)
   end
 
   it "show all invoices belonging to a merchant" do
@@ -257,11 +257,11 @@ describe "Merchants API" do
 
     expect(response).to be_successful
 
-    merchants = JSON.parse(response.body)
+    invoices = JSON.parse(response.body)
 
-    expect(merchants["data"].count).to eq(4)
+    expect(invoices["data"].count).to eq(4)
 
-    expect(merchants["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_2.id }).to eq(true)
+    expect(invoices["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_2.id }).to eq(true)
   end
 
 end
