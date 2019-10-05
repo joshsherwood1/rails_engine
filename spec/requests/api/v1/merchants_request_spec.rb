@@ -212,4 +212,56 @@ describe "Merchants API" do
     expect(merchants["data"].count).to eq(1)
     expect(merchants["data"].all? { |hash| Time.parse(hash["attributes"]["created_at"]) == "2012-03-27 14:54:00 UTC" }).to eq(true)
   end
+
+  it "show all items belonging to a merchant" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    item_1 = create(:item, unit_price: 12345, merchant_id: merchant_2.id)
+    item_2 = create(:item, unit_price: 22345, merchant_id: merchant_1.id)
+    item_3 = create(:item, unit_price: 32345, merchant_id: merchant_1.id)
+    item_4 = create(:item, unit_price: 42345, merchant_id: merchant_1.id)
+    item_5 = create(:item, unit_price: 52345, merchant_id: merchant_1.id)
+    item_6 = create(:item, unit_price: 62345, merchant_id: merchant_2.id)
+
+
+    get "/api/v1/merchants/#{merchant_1.id}/items"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(4)
+
+    expect(merchants["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_1.id }).to eq(true)
+  end
+
+  it "show all invoices belonging to a merchant" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    item_1 = create(:item, unit_price: 12345, merchant_id: merchant_2.id)
+    item_2 = create(:item, unit_price: 22345, merchant_id: merchant_1.id)
+    item_3 = create(:item, unit_price: 32345, merchant_id: merchant_1.id)
+    item_4 = create(:item, unit_price: 42345, merchant_id: merchant_1.id)
+    item_5 = create(:item, unit_price: 52345, merchant_id: merchant_1.id)
+    item_6 = create(:item, unit_price: 62345, merchant_id: merchant_2.id)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    invoice_3 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    invoice_4 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    invoice_6 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+
+    get "/api/v1/merchants/#{merchant_2.id}/invoices"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"].count).to eq(4)
+
+    expect(merchants["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_2.id }).to eq(true)
+  end
+
 end
