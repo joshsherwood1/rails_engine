@@ -264,4 +264,16 @@ describe "Merchants API" do
     expect(invoices["data"].all? { |hash| hash["attributes"]["merchant_id"] == merchant_2.id }).to eq(true)
   end
 
+  it "sends a random merchants" do
+    create_list(:merchant, 10)
+
+    get "/api/v1/merchants/random"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["attributes"].count).to eq(3)
+  end
+
 end
