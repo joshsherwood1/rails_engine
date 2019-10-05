@@ -559,4 +559,20 @@ describe "Invoice Items API" do
 
     expect(item["data"]["id"]).to eq(item_1.id.to_s)
   end
+
+  it "show invoice associated with an item invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    item_1 = create(:item, unit_price: 62345, merchant_id: merchant_1.id, id: 6)
+    invoice_item_1 = create(:invoice_item, item_id: item_1.id, invoice_id: invoice_1.id, unit_price: item_1.unit_price, quantity: 1, id: 1, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/invoice_items/#{invoice_item_1.id}/invoice"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["id"]).to eq(invoice_1.id.to_s)
+  end
 end
