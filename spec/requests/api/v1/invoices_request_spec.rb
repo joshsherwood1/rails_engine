@@ -363,11 +363,11 @@ describe "Invoices API" do
 
     expect(response).to be_successful
 
-    transactions = JSON.parse(response.body)
+    invoice_items = JSON.parse(response.body)
 
-    expect(transactions["data"].count).to eq(3)
+    expect(invoice_items["data"].count).to eq(3)
 
-    expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_5.id }).to eq(true)
+    expect(invoice_items["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_5.id }).to eq(true)
   end
 
   it "show all items associated with an invoice" do
@@ -387,9 +387,9 @@ describe "Invoices API" do
 
     expect(response).to be_successful
 
-    transactions = JSON.parse(response.body)
+    items = JSON.parse(response.body)
 
-    expect(transactions["data"].count).to eq(3)
+    expect(items["data"].count).to eq(3)
   end
 
   it "show customer associated with an invoice" do
@@ -404,5 +404,19 @@ describe "Invoices API" do
     customer = JSON.parse(response.body)
 
     expect(customer["data"]["id"]).to eq(customer_1.id.to_s)
+  end
+
+  it "show merchant associated with an invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+
+    get "/api/v1/invoices/#{invoice_5.id}/merchant"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(merchant_1.id.to_s)
   end
 end
