@@ -5,8 +5,8 @@ Rails.application.routes.draw do
         get "/most_revenue", to: "most_revenue#index"
         get "/find", to: "find#show"
         get "/find_all", to: "find#index"
-        get ":id/items", to: "items#index"
-        get ":id/invoices", to: "invoices#index"
+        get "/:id/items", to: "items#index"
+        get "/:id/invoices", to: "invoices#index"
       end
       namespace :items do
         get "/find", to: "find#show"
@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       namespace :invoices do
         get "/find", to: "find#show"
         get "/find_all", to: "find#index"
+        get "/:id/transactions", to: "transactions#index"
       end
       namespace :invoice_items do
         get "/find", to: "find#show"
