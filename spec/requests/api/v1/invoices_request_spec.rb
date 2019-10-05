@@ -369,4 +369,26 @@ describe "Invoices API" do
 
     expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_5.id }).to eq(true)
   end
+
+  it "show all items associated with an invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    invoice_6 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    item_1 = create(:item, unit_price: 12345, merchant_id: merchant_1.id)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_6.id, unit_price: item_1.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_5.id, unit_price: item_1.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_5.id, unit_price: item_1.unit_price, quantity: 15)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_5.id, unit_price: item_1.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_6.id, unit_price: item_1.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_6.id, unit_price: item_1.unit_price, quantity: 1)
+
+    get "/api/v1/invoices/#{invoice_5.id}/items"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(3)
+  end
 end
