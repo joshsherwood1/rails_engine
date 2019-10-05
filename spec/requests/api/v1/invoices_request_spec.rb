@@ -322,4 +322,27 @@ describe "Invoices API" do
     expect(invoices["data"].count).to eq(5)
     expect(invoices["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-03-27 14:53:59 UTC" }).to eq(true)
   end
+
+  it "show all transactions belonging to an invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+
+    get "/api/v1/invoices/#{invoice_2.id}/transactions"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].count).to eq(4)
+
+    expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_2.id }).to eq(true)
+  end
 end
