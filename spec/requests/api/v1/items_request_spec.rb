@@ -236,7 +236,7 @@ describe "Items API" do
     items = JSON.parse(response.body)
 
     expect(items["data"].count).to eq(1)
-    expect(items["data"].all? { |hash| hash["attributes"]["unit_price"] == 32345 }).to eq(true)
+    expect(items["data"].all? { |hash| hash["attributes"]["unit_price"] == "323.45" }).to eq(true)
   end
 
   it "finds all item record matches based on created_at" do
