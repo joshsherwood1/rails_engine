@@ -429,7 +429,8 @@ describe "Invoice Items API" do
     invoice_items = JSON.parse(response.body)
 
     expect(invoice_items["data"].count).to eq(1)
-    expect(invoice_items["data"].all? { |hash| hash["attributes"]["unit_price"] == 52345 }).to eq(true)
+
+    expect(invoice_items["data"].all? { |hash| hash["attributes"]["unit_price"] == "523.45" }).to eq(true)
   end
 
   it "finds all invoice items record matches based on quantity" do
@@ -541,5 +542,21 @@ describe "Invoice Items API" do
 
     expect(invoice_items["data"].count).to eq(5)
     expect(invoice_items["data"].all? { |hash| Time.parse(hash["attributes"]["created_at"]) == "2012-03-27 16:12:25 UTC" }).to eq(true)
+  end
+
+  it "show item associated with an item invoice" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    item_1 = create(:item, unit_price: 62345, merchant_id: merchant_1.id, id: 6)
+    invoice_item_1 = create(:invoice_item, item_id: item_1.id, invoice_id: invoice_1.id, unit_price: item_1.unit_price, quantity: 1, id: 1, updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/invoice_items/#{invoice_item_1.id}/item"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq(item_1.id.to_s)
   end
 end
