@@ -316,4 +316,19 @@ describe "Transactions API" do
     expect(transactions["data"].count).to eq(5)
     expect(transactions["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-03-27 14:53:59 UTC" }).to eq(true)
   end
+
+  it "show invoice associated with a transaction" do
+    customer = create(:customer)
+    merchant_5 = create(:merchant, name: "Williamson Group")
+    invoice_1 = create(:invoice, customer_id: customer.id, merchant_id: merchant_5.id, id: 1)
+    transaction_1 = create(:transaction, invoice_id: invoice_1.id, result: "success", id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "", updated_at: "2012-03-27 14:53:59 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+    get "/api/v1/transactions/#{transaction_1.id}/invoice"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["id"]).to eq(invoice_1.id.to_s)
+  end
 end
