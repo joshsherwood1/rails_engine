@@ -587,8 +587,8 @@ describe "Invoice Items API" do
 
     expect(response).to be_successful
 
-    invoice = JSON.parse(response.body)
+    invoice_item = JSON.parse(response.body)
 
-    expect(invoice["data"]["attributes"].count).to eq(5)
+    expect(invoice_item["data"]["attributes"].count).to eq(5)
   end
 end
