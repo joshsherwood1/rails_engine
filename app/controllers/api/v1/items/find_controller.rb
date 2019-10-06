@@ -3,7 +3,7 @@ class Api::V1::Items::FindController < ApplicationController
     #binding.pry
     if params.keys.include?("name")
       name = params["name"]
-      item = Item.find_by("LOWER(name) = ?", name.downcase)
+      item = Item.find_first_item_by_name(name)
       render json: ItemSerializer.new(item)
     elsif params.keys.include?("updated_at")
       updated_at = params["updated_at"]
@@ -13,7 +13,7 @@ class Api::V1::Items::FindController < ApplicationController
       render json: ItemSerializer.new(Item.find(id))
     elsif params.keys.include?("description")
       description = params["description"]
-      item = Item.find_by("LOWER(description) = ?", description.downcase)
+      item = Item.find_first_item_by_description(description)
       render json: ItemSerializer.new(item)
     elsif params.keys.include?("unit_price")
       unit_price = params["unit_price"]

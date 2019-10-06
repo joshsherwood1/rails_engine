@@ -2,7 +2,7 @@ class Api::V1::Customers::FindController < ApplicationController
   def show
     if params.keys.include?("first_name")
       first_name = params["first_name"]
-      customer = Customer.find_by("LOWER(first_name) = ?", first_name.downcase)
+      customer = Customer.find_first_customer_by_first_name(first_name)
       render json: CustomerSerializer.new(customer)
     elsif params.keys.include?("updated_at")
       updated_at = params["updated_at"]
@@ -12,7 +12,7 @@ class Api::V1::Customers::FindController < ApplicationController
       render json: CustomerSerializer.new(Customer.find(id))
     elsif params.keys.include?("last_name")
       last_name = params["last_name"]
-      customer = Customer.find_by("LOWER(last_name) = ?", last_name.downcase)
+      customer = Customer.find_first_customer_by_last_name(last_name)
       render json: CustomerSerializer.new(customer)
     else params.keys.include?("created_at")
       created_at = params["created_at"]
