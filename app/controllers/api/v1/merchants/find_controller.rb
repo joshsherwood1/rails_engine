@@ -2,7 +2,9 @@ class Api::V1::Merchants::FindController < ApplicationController
   def show
     #binding.pry
     if params.keys.include?("name")
-      render json: MerchantSerializer.new(Merchant.find_by(name: params["name"]))
+      #render json: MerchantSerializer.new(Merchant.find_by(name: params["name"]))
+      merchant = Merchant.find_by("LOWER(name) = ?", params["name"].downcase)
+      render json: MerchantSerializer.new(merchant)
     elsif params.keys.include?("updated_at")
       merchant = Merchant.find_by(updated_at: params["updated_at"])
       render json: MerchantSerializer.new(merchant)
