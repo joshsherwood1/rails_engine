@@ -36,4 +36,8 @@ class Invoice < ApplicationRecord
   def self.get_random_id
     pluck(:id).sample
   end
+
+  def self.find_first_invoice_by_status(status)
+    find_by("LOWER(status) = ?", status.downcase)
+  end
 end

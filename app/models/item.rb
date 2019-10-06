@@ -48,7 +48,16 @@ class Item < ApplicationRecord
   end
 
   def find_best_day
-    binding.pry
-    invoices.joins(:invoice_items, :transactions).group("invoices.created_at").merge(Transaction.successful).select("invoices.created_at, sum(invoice_items.quantity * invoice_items.unit_price) as revenue").order("revenue desc").limit(1)
+    #binding.pry
+    invoices.joins(:invoice_items, :transactions).group("invoices.created_at").merge(Transaction.successful).select("invoices.created_at, sum(invoice_items.quantity * invoice_items.unit_price) as revenue").order("revenue desc")
+    
+  end
+
+  def self.find_first_item_by_name(name)
+    find_by("LOWER(name) = ?", name.downcase)
+  end
+
+  def self.find_first_item_by_description(description)
+    find_by("LOWER(description) = ?", description.downcase)
   end
 end

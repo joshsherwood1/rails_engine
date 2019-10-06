@@ -79,5 +79,13 @@ RSpec.describe Customer, type: :model do
     it 'can get random customer id' do
       expect(Customer.get_random_id).to be_between(1, 6)
     end
+
+    it 'can find_first_customer_by_first_name' do
+      expect(Customer.find_first_customer_by_first_name("Lila")).to eq(@customer_6)
+    end
+
+    it 'can find_first_customer_by_last_name' do
+      expect(Customer.find_first_customer_by_last_name("Smith")).to eq(@customer_1)
+    end
   end
 end

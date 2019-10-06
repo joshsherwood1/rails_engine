@@ -75,5 +75,9 @@ RSpec.describe Merchant, type: :model do
     it 'can get random merchant id' do
       expect(Merchant.get_random_id).to be_between(1, 6)
     end
+
+    it 'can find_first_merchant_by_name' do
+      expect(Merchant.find_first_merchant_by_name("Klein, Rempel and Jones")).to eq(@merchant_2)
+    end
   end
 end

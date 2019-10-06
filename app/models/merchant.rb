@@ -37,12 +37,17 @@ class Merchant < ApplicationRecord
     today = Date.strptime(date, '%Y-%m-%d')
     tomorrow = today + 1
     tomorrow_sql = tomorrow.strftime('%Y-%m-%d')
-    binding.pry
-    joins(:transactions, :invoice_items).merge(Transaction.successful).where("transactions.created_at > ?", today).where("transactions.created_at < ?", tomorrow_sql).sum("invoice_items.quantity * invoice_items.unit_price")
+    joins(:transactions, :invoice_items, :invoices).group("invoices.created_at").where("invoices.created_at > ?", today).where("invoices.created_at < ?", tomorrow_sql).merge(Transaction.successful).sum("invoice_items.quantity * invoice_items.unit_price")
+    #.select("sum(invoice_items.quantity * invoice_items.unit_price)")
+    #.where("invoices.created_at = ?", date)
   end
 
   def find_favorite_customer
     #binding.pry
     invoices.joins(:transactions, :invoice_items, :customers).group(:customer_id).merge(Transaction.successful).select("customers.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue").order("revenue desc").limit(1)
+  end
+
+  def self.find_first_merchant_by_name(name)
+    find_by("LOWER(name) = ?", name.downcase)
   end
 end
