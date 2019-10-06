@@ -79,7 +79,7 @@ describe "Merchants API" do
     merchant_5 = create(:merchant, name: "Williamson Group")
     merchant_6 = create(:merchant, name: "Williamson Group")
 
-    get "/api/v1/merchants/find?name=Cummings-Thiel"
+    get "/api/v1/merchants/find?name=CUMMINGS-ThiEL"
 
     expect(response).to be_successful
 
@@ -312,8 +312,6 @@ describe "Merchants API" do
     expect(response).to be_successful
 
     revenue = JSON.parse(response.body)
-
-    binding.pry
 
     expect(revenue["data"]["attributes"]["revenue"]).to eq("689,345.00")
     #expect(merchants["data"][2]["id"]).to eq(merchant_3.id.to_s)

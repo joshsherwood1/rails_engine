@@ -359,8 +359,8 @@ describe "Items API" do
 
     date = JSON.parse(response.body)
 
-    #expect(date["data"].count).to eq(3)
+    expect(date["data"]["attributes"]["best_day"]).to eq("2012-03-28")
 
-    expect(date["data"].first["id"]).to eq(item_3.id.to_s)
+    #expect(date["data"].first["id"]).to eq(item_3.id.to_s)
   end
 end
