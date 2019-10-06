@@ -2,7 +2,8 @@ class Api::V1::Invoices::FindController < ApplicationController
   def show
     if params.keys.include?("status")
       status = params["status"]
-      render json: InvoiceSerializer.new(Invoice.find_by(status: status))
+      invoice = Invoice.find_first_invoice_by_status(status)
+      render json: InvoiceSerializer.new(invoice)
     elsif params.keys.include?("updated_at")
       updated_at = params["updated_at"]
       render json: InvoiceSerializer.new(Invoice.find_by(updated_at: updated_at))

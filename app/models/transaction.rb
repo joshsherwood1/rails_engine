@@ -31,10 +31,14 @@ class Transaction < ApplicationRecord
   end
 
   def self.find_by_result(result)
-    where(result: result)
+    where("LOWER(result) = ?", result.downcase)
   end
 
   def self.find_by_credit_card_expiration_date(credit_card_expiration_date)
     where(credit_card_expiration_date: credit_card_expiration_date)
+  end
+
+  def self.get_random_id
+    pluck(:id).sample
   end
 end

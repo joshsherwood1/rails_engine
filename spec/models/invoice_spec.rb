@@ -60,5 +60,12 @@ RSpec.describe Invoice, type: :model do
       expect(Invoice.find_by_merchant_id(4)).to eq([@invoice_4, @invoice_5])
     end
 
+    it 'can get random invoice id' do
+      expect(Invoice.get_random_id).to be_between(1, 6)
+    end
+
+    it 'can find find_first_invoice_by_status' do
+      expect(Invoice.find_first_invoice_by_status("shipped")).to eq(@invoice_1)
+    end
   end
 end

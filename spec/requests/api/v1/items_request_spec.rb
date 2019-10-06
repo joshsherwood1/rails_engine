@@ -262,4 +262,105 @@ describe "Items API" do
     expect(items["data"].count).to eq(5)
     expect(items["data"].all? { |hash| Time.parse(hash["attributes"]["updated_at"]) == "2012-02-27 14:53:59 UTC" }).to eq(true)
   end
+
+  it "sends a random item" do
+    merchant = create(:merchant)
+    create_list(:item, 10, merchant_id: merchant.id)
+
+    get "/api/v1/items/random"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body)
+
+    expect(item["data"]["attributes"].count).to eq(5)
+  end
+
+  it "sends specified top items by most revenue" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant)
+    merchant_4 = create(:merchant)
+    merchant_5 = create(:merchant)
+    merchant_6 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id)
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id)
+    invoice_3 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_3.id)
+    invoice_4 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id)
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id)
+    invoice_6 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_5.id)
+    item_1 = create(:item, unit_price: 12345, merchant_id: merchant_5.id)
+    item_2 = create(:item, unit_price: 22345, merchant_id: merchant_1.id)
+    item_3 = create(:item, unit_price: 32345, merchant_id: merchant_2.id)
+    item_4 = create(:item, unit_price: 42345, merchant_id: merchant_3.id)
+    item_5 = create(:item, unit_price: 52345, merchant_id: merchant_4.id)
+    item_6 = create(:item, unit_price: 62345, merchant_id: merchant_4.id)
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_6.id, unit_price: item_1.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_2.id, invoice_id: invoice_1.id, unit_price: item_2.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_3.id, invoice_id: invoice_2.id, unit_price: item_3.unit_price, quantity: 15)
+    create(:invoice_item, item_id: item_4.id, invoice_id: invoice_3.id, unit_price: item_4.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_5.id, invoice_id: invoice_4.id, unit_price: item_5.unit_price, quantity: 1)
+    create(:invoice_item, item_id: item_6.id, invoice_id: invoice_5.id, unit_price: item_6.unit_price, quantity: 1)
+    create(:transaction, invoice_id: invoice_1.id, result: "success")
+    create(:transaction, invoice_id: invoice_2.id, result: "success")
+    create(:transaction, invoice_id: invoice_3.id, result: "success")
+    create(:transaction, invoice_id: invoice_4.id, result: "success")
+    create(:transaction, invoice_id: invoice_5.id, result: "success")
+    create(:transaction, invoice_id: invoice_6.id, result: "success")
+
+
+    get "/api/v1/items/most_revenue?quantity=3"
+
+    expect(response).to be_successful
+
+    items = JSON.parse(response.body)
+
+    expect(items["data"].count).to eq(3)
+
+    expect(items["data"].first["id"]).to eq(item_3.id.to_s)
+    expect(items["data"][1]["id"]).to eq(item_6.id.to_s)
+    expect(items["data"][2]["id"]).to eq(item_5.id.to_s)
+  end
+
+  it "returns the date with the most sales for the given item using the invoice date" do
+    customer_1 = create(:customer)
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant)
+    merchant_4 = create(:merchant)
+    merchant_5 = create(:merchant)
+    merchant_6 = create(:merchant)
+    invoice_1 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_1.id, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    invoice_2 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_2.id, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    invoice_3 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_3.id, updated_at: "2012-03-28 16:12:25 UTC", created_at: "2012-03-28 16:12:25 UTC")
+    invoice_4 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id, updated_at: "2012-03-28 16:12:25 UTC", created_at: "2012-03-28 16:12:25 UTC")
+    invoice_5 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_4.id, updated_at: "2012-03-29 16:12:25 UTC", created_at: "2012-03-29 16:12:25 UTC")
+    invoice_6 = create(:invoice, customer_id: customer_1.id, merchant_id: merchant_5.id, updated_at: "2012-03-29 16:12:25 UTC", created_at: "2012-03-29 16:12:25 UTC")
+    item_1 = create(:item, unit_price: 12345, merchant_id: merchant_5.id, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    item_2 = create(:item, unit_price: 22345, merchant_id: merchant_1.id, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_6.id, unit_price: item_1.unit_price, quantity: 1, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_2.id, invoice_id: invoice_1.id, unit_price: item_2.unit_price, quantity: 1, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_3.id, unit_price: item_1.unit_price, quantity: 15, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_2.id, invoice_id: invoice_2.id, unit_price: item_2.unit_price, quantity: 1, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_1.id, invoice_id: invoice_4.id, unit_price: item_1.unit_price, quantity: 1, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:invoice_item, item_id: item_2.id, invoice_id: invoice_5.id, unit_price: item_2.unit_price, quantity: 1, updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_1.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_2.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_3.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_4.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_5.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+    create(:transaction, invoice_id: invoice_6.id, result: "success", updated_at: "2012-03-27 16:12:25 UTC", created_at: "2012-03-27 16:12:25 UTC")
+
+
+    get "/api/v1/items/#{item_1.id}/best_day"
+
+    expect(response).to be_successful
+
+    date = JSON.parse(response.body)
+
+    expect(date["data"]["attributes"]["best_day"]).to eq("2012-03-28")
+
+    #expect(date["data"].first["id"]).to eq(item_3.id.to_s)
+  end
 end

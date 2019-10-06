@@ -9,13 +9,16 @@ class Api::V1::Transactions::FindController < ApplicationController
       render json: TransactionSerializer.new(Transaction.find_by(updated_at: updated_at))
     elsif params.keys.include?("credit_card_number")
       credit_card_number = params["credit_card_number"]
-      render json: TransactionSerializer.new(Transaction.find_by(credit_card_number: credit_card_number))
+      transaction = Transaction.find_by(credit_card_number: credit_card_number)
+      render json: TransactionSerializer.new(transaction)
     elsif params.keys.include?("credit_card_expiration_date")
       credit_card_expiration_date = params["credit_card_expiration_date"]
-      render json: TransactionSerializer.new(Transaction.find_by(credit_card_expiration_date: credit_card_expiration_date))
+      transaction = Transaction.find_by(credit_card_expiration_date: credit_card_expiration_date)
+      render json: TransactionSerializer.new(transaction)
     elsif params.keys.include?("result")
       result = params["result"]
-      render json: TransactionSerializer.new(Transaction.find_by(result: result))
+      transaction = Transaction.find_by("LOWER(result) = ?", result.downcase)
+      render json: TransactionSerializer.new(transaction)
     elsif params.keys.include?("id")
       id = params["id"]
       render json: TransactionSerializer.new(Transaction.find(id))

@@ -242,4 +242,16 @@ describe "Customers API" do
 
     expect(transactions["data"].all? { |hash| hash["attributes"]["invoice_id"] == invoice_1.id || invoice_2.id}).to eq(true)
   end
+
+  it "sends a random customer" do
+    create_list(:customer, 10)
+
+    get "/api/v1/customers/random"
+
+    expect(response).to be_successful
+
+    customer = JSON.parse(response.body)
+
+    expect(customer["data"]["attributes"].count).to eq(3)
+  end
 end
