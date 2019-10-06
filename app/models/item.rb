@@ -14,11 +14,11 @@ class Item < ApplicationRecord
   end
 
   def self.find_by_name(name)
-    where(name: name)
+    where("LOWER(name) = ?", name.downcase)
   end
 
   def self.find_by_description(description)
-    where(description: description)
+    where("LOWER(description) = ?", description.downcase)
   end
 
   def self.find_by_unit_price(unit_price)

@@ -7,11 +7,11 @@ class Customer < ApplicationRecord
                         :updated_at
 
   def self.find_by_first_name(first_name)
-    where(first_name: first_name)
+    where("LOWER(first_name) = ?", first_name.downcase)
   end
 
   def self.find_by_last_name(last_name)
-    where(last_name: last_name)
+    where("LOWER(last_name) = ?", last_name.downcase)
   end
 
   def self.find_by_id(id)
